@@ -17,7 +17,7 @@ const (
 	Transaction   string = "transaction"
 	Version       string = "version"
 
-	// Vutiliti-specific headers
+	// custom headers
 	EndDate   string = "end-date"
 	MeterID   string = "meter-id"
 	OrgID     string = "org-id"
