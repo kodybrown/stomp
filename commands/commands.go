@@ -18,10 +18,8 @@ const (
 	Unsubscribe string = "UNSUBSCRIBE"
 
 	// custom commands
-	Ping string = "PING"
-	Pong string = "PONG"
-
-	// Vutiliti-specific commands
+	Ping             string = "PING"
+	Pong             string = "PONG"
 	GetLastMeterRead string = "GET-LAST-METER-READ"
 	Read             string = "READ"
 )
