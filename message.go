@@ -2,7 +2,6 @@ package stomp
 
 import (
 	"fmt"
-	"log"
 	"strings"
 )
 
@@ -84,6 +83,8 @@ func ParseMessage(msg string) (*Message, error) {
 		return nil, fmt.Errorf("Invalid message format: missing `%s` at end of body", EOM)
 	}
 
+	msg = strings.TrimRight(msg, EOM)
+
 	var lines = strings.Split(msg, NewLine)
 	var isBody = false
 	var body = ""
@@ -92,34 +93,43 @@ func ParseMessage(msg string) (*Message, error) {
 		return nil, fmt.Errorf("Invalid message format: not enough lines")
 	}
 
+	var cmd string
+
 	// for (int i = 1; i < lines.Length; i++) {
 	for _, line := range lines {
+		line = strings.TrimSpace(line)
+
+		if cmd == "" {
+			// The line is the command..
+			// log.Println("command =", line)
+			cmd = line
+			continue
+		}
+
 		if isBody {
-			log.Println("body +=", line)
+			// log.Println("body +=", line)
 			body += NewLine + line
 		} else {
 			if line == "" {
 				// the rest is the body.
-				log.Println("switch to body")
+				// log.Println("switch to body")
 				isBody = true
 				continue
 			}
 
-			if strings.Index(line, ":") == -1 {
-				// The line is the command..
-				log.Println("command =", line)
-				message.SetCommand(line)
-			} else {
-				// The line is a header..
-				log.Println("line =", line)
-				var header = strings.SplitN(line, ":", 2)
-				message.Headers()[header[0]] = header[1]
-			}
+			// The line is a header..
+			// log.Println("header  =", line)
+			var header = strings.SplitN(line, ":", 2)
+			message.Headers()[header[0]] = header[1]
 		}
 	}
 
+	message.SetCommand(cmd)
+
 	// Remove first NewLine (that was added above)
-	message.SetBody(body[len(NewLine) : len(body)-len(NewLine)])
+	if len(body) > len(NewLine) {
+		message.SetBody(body[len(NewLine):])
+	}
 
 	return message, nil
 }
