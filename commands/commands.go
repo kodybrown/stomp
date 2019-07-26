@@ -20,6 +20,5 @@ const (
 	// custom commands
 	Ping             string = "PING"
 	Pong             string = "PONG"
-	GetLastMeterRead string = "GET-LAST-METER-READ"
 	Read             string = "READ"
 )
